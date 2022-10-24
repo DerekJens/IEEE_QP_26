@@ -42,7 +42,7 @@ void loop() {
 
      count++;
 
-     if(count == 5){
+     if(count == 6){
        continue;
      }
   }
