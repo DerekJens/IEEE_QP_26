@@ -1,1 +1,0 @@
-     averageSound = averageSound/10;
