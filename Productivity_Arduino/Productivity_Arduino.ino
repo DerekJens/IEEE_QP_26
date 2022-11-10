@@ -1,54 +1,49 @@
 
+const int collectSwitch = 5;
 
-
-  #include <dht.h>
-
-  #define DHTPIN A2
-  #define dht_apin A2
-  
-
-  dht DHT;
-
-  int chk;
-  float temp;
+int switchState = 0;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
- 
+  pinMode(collectSwitch, INPUT);
 
 }
 
 
 void loop() {
   // put your main code here, to run repeatedly:
-  int lightValue = analogRead(A1); //light sensor
-  DHT.read11(dht_apin);
-  temp = DHT.temperature;
-  int soundValue = analogRead(A3); //sound sensor
+  int lightValue = analogRead(A0); //light sensor
+  int tempValue = analogRead(A1); //temp sensor
+  int soundValue = analogRead(A2); //sound sensor
+  switchState = digitalRead(collectSwitch);
 
-//celcius to farenheit
-  temp = (temp*9/5)+32;
-    Serial.print("lightValue: ");
-    Serial.println(lightValue);
-    if(lightValue < 500){
-      Serial.print("too dark");
-    }
-    else if(lightValue < 800){
-      Serial.print("perfect");
-    }
-    else{
-      Serial.print("too bright");
-    }
-    Serial.print(" ");
-    Serial.print("TempValue: ");
-    Serial.println(temp);
-    Serial.print(" ");
-    Serial.print("SoundValue: ");
-    Serial.println(soundValue);
-    delay(100);
+  int averageLight{0};
+  int averageTemp{0};
+  int averageSound{0};
 
- 
+  if(switchState == HIGH){
+    int count = 0;
 
-  
+    for(int i = 0; i < 10; i++){
+      averageLight = averageLight + analogRead(A0);
+      averageTemp = averageTemp + analogRead(A1);
+      averageSound = averageSound + analogRead(A2);
+      delay(100);
+     }
+
+     averageLight = averageLight/10;
+     averageTemp = averageTemp/10;
+     averageSound = averageSound/10;
+     
+     Serial.print("Light: " averageLight "\n");
+     Serial.print("Temp: " averageTemp "\n");
+     Serial.print("Sound: " averageSound "\n");
+
+     count++;
+
+     if(count == 6){
+       continue;
+     }
+  }
 }
