@@ -32,17 +32,18 @@ void loop() {
   DHT.read11(dht_apin);
   temp = DHT.temperature;
   float soundValue = analogRead(A3); //sound sensor
-  float arr[3][10] = {};
+
+  float averageLight = 0;
+  float averageTemp = 0;
+  float averageSound = 0;
 //celcius to farenheit
   temp = (temp*9/5)+32;
   //printing values
   for(int count = 0; count < 10; count++){
-    arr[0][count] = lightValue;
-    arr[1][count] = temp;
-    arr[2][count] = soundValue;
     mySerial.print(" ");
     mySerial.print("lightValue: ");
     mySerial.println(lightValue);
+    averageLight+=lightValue;
     delay(10);
     if(lightValue < 500){
       Serial.print(" too dark");
@@ -56,14 +57,48 @@ void loop() {
     mySerial.print(" ");
     mySerial.print("TempValue: ");
     mySerial.println(temp);
+    averageTemp+=temp;
     delay(10);
     mySerial.print(" ");
     mySerial.print("SoundValue: ");
     mySerial.println(soundValue);
+    averageSound+=soundValue;
     delay(100);
   }
-  
+  averageLight/=10;
+  averageTemp/=10;
+  averageSound/=10;
+  mySerial.print("Light: ");
+  if(averageLight < 300){
+    mySerial.println("too dark");
+  }
+  else if(averageLight > 700){
+    mySerial.println("too bright");
+  }
+  else{
+    mySerial.println("perfect");
+  }
 
+  mySerial.print("Sound: ");
+  if(averageSound > 50){
+    mySerial.println("too loud");
+  }
+  else{
+    mySerial.println("perfect");
+  }
+
+  mySerial.print("Temp: ");
+  if(averageTemp < 65){
+    mySerial.println("too cold");
+  }
+  else if(averageTemp > 80){
+    mySerial.println("too warm");
+  }
+  else{
+    mySerial.println("perfect");
+  }
+  
+  while(1){}
  
 
 
